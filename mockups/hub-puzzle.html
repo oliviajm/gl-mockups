@@ -120,7 +120,7 @@ body {
   position: relative;
   width: 340px;
   height: 340px;
-  margin-bottom: 64px;
+  margin-bottom: 40px;
 }
 
 .puzzle-svg {
@@ -163,75 +163,8 @@ body {
   filter: brightness(1.08);
 }
 
-/* ===================================================
-   LINK LIST (below puzzle, minimal)
-   =================================================== */
-.links {
-  width: 100%;
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.link-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: var(--white);
-  border: 1px solid var(--fog);
-  border-radius: 8px;
-  padding: 18px 20px;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color .2s, box-shadow .2s, transform .18s;
-  opacity: 0;
-  transform: translateY(10px);
-}
-.link-item.visible {
-  animation: fadeUp .5s ease forwards;
-}
-.link-item:nth-child(1) { animation-delay: .0s; }
-.link-item:nth-child(2) { animation-delay: .06s; }
-.link-item:nth-child(3) { animation-delay: .12s; }
-.link-item:nth-child(4) { animation-delay: .18s; }
-
-.link-item:hover {
-  border-color: var(--fog-dark);
-  box-shadow: 0 4px 16px rgba(26,22,20,.07);
-  transform: translateY(-2px);
-}
-
-.link-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.link-1 .link-dot { background: var(--c1); }
-.link-2 .link-dot { background: var(--c2); }
-.link-3 .link-dot { background: var(--c3); }
-.link-4 .link-dot { background: var(--c4); }
-
-.link-text { flex: 1; }
-.link-name {
-  font-family: var(--font-hed);
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--ink);
-  letter-spacing: -.01em;
-  display: block;
-  margin-bottom: 1px;
-}
-.link-domain {
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-.link-arrow {
-  color: var(--fog-dark);
-  flex-shrink: 0;
-  transition: transform .2s, color .2s;
-}
-.link-item:hover .link-arrow { transform: translateX(3px); color: var(--bridge-red); }
+/* Piece hover cursor */
+.piece a { cursor: pointer; }
 
 /* ===================================================
    FOOTER
@@ -430,56 +363,49 @@ body {
 
       <!-- ── TL: Civic Engagement ── -->
       <g class="piece piece-tl" id="pieceTLGroup">
-        <rect x="0" y="0" width="200" height="200" fill="#B04A32" clip-path="url(#clipTL)"/>
-        <!-- subtle texture lines -->
-        <rect x="0" y="0" width="200" height="200" fill="url(#texTL)" clip-path="url(#clipTL)" opacity=".08"/>
-        <g class="piece-label-group" clip-path="url(#clipTL)">
-          <text class="piece-label" x="24" y="62">Civic</text>
-          <text class="piece-label" x="24" y="82">Engage-</text>
-          <text class="piece-label" x="24" y="102">ment</text>
-          <text class="piece-sublabel" x="24" y="120">garrysindex.org</text>
-        </g>
-        <!-- invisible hit area -->
-        <a href="garrysindex.html">
-          <use href="#pieceTL" fill="transparent"/>
+        <a href="garrysindex.html" style="cursor:pointer">
+          <rect x="0" y="0" width="200" height="200" fill="#B04A32" clip-path="url(#clipTL)" class="piece-fill"/>
+          <g class="piece-label-group" clip-path="url(#clipTL)">
+            <text class="piece-label" x="24" y="58">Civic</text>
+            <text class="piece-label" x="24" y="78">Engage-</text>
+            <text class="piece-label" x="24" y="98">ment</text>
+            <text class="piece-sublabel" x="24" y="116">garrysindex.org</text>
+          </g>
         </a>
       </g>
 
       <!-- ── TR: Articles ── -->
       <g class="piece piece-tr" id="pieceTRGroup">
-        <rect x="140" y="0" width="200" height="200" fill="#3D7B7B" clip-path="url(#clipTR)"/>
-        <g class="piece-label-group" clip-path="url(#clipTR)">
-          <text class="piece-label" x="192" y="62">Articles</text>
-          <text class="piece-sublabel" x="192" y="82">garrysnotes.org</text>
-        </g>
-        <a href="leaving.html?to=garrysnotes">
-          <use href="#pieceTR" fill="transparent"/>
+        <a href="https://garrysnotes.org" target="_blank" style="cursor:pointer">
+          <rect x="140" y="0" width="200" height="200" fill="#3D7B7B" clip-path="url(#clipTR)" class="piece-fill"/>
+          <g class="piece-label-group" clip-path="url(#clipTR)">
+            <text class="piece-label" x="196" y="58">Articles</text>
+            <text class="piece-sublabel" x="196" y="76">garrysnotes.org</text>
+          </g>
         </a>
       </g>
 
-      <!-- ── BL: Data ── -->
+      <!-- ── BL: Civic Data ── -->
       <g class="piece piece-bl" id="pieceBLGroup">
-        <rect x="0" y="140" width="200" height="200" fill="#C4923E" clip-path="url(#clipBL)"/>
-        <g class="piece-label-group" clip-path="url(#clipBL)">
-          <text class="piece-label" x="24" y="230">Civic</text>
-          <text class="piece-label" x="24" y="250">Data</text>
-          <text class="piece-sublabel" x="24" y="268">garryslist.org</text>
-        </g>
-        <a href="#">
-          <use href="#pieceBL" fill="transparent"/>
+        <a href="https://garryslist.org" target="_blank" style="cursor:pointer">
+          <rect x="0" y="140" width="200" height="200" fill="#C4923E" clip-path="url(#clipBL)" class="piece-fill"/>
+          <g class="piece-label-group" clip-path="url(#clipBL)">
+            <text class="piece-label" x="24" y="226">Civic</text>
+            <text class="piece-label" x="24" y="246">Data</text>
+            <text class="piece-sublabel" x="24" y="264">garryslist.org</text>
+          </g>
         </a>
       </g>
 
       <!-- ── BR: Newsletter ── -->
       <g class="piece piece-br" id="pieceBRGroup">
-        <rect x="140" y="140" width="200" height="200" fill="#5A6E8A" clip-path="url(#clipBR)"/>
-        <g class="piece-label-group" clip-path="url(#clipBR)">
-          <text class="piece-label" x="196" y="230">News-</text>
-          <text class="piece-label" x="196" y="250">letter</text>
-          <text class="piece-sublabel" x="196" y="268">Subscribe</text>
-        </g>
-        <a href="#newsletter">
-          <use href="#pieceBR" fill="transparent"/>
+        <a href="#newsletter" style="cursor:pointer">
+          <rect x="140" y="140" width="200" height="200" fill="#5A6E8A" clip-path="url(#clipBR)" class="piece-fill"/>
+          <g class="piece-label-group" clip-path="url(#clipBR)">
+            <text class="piece-label" x="196" y="226">News-</text>
+            <text class="piece-label" x="196" y="246">letter</text>
+            <text class="piece-sublabel" x="196" y="264">Subscribe</text>
+          </g>
         </a>
       </g>
 
@@ -493,44 +419,7 @@ body {
   </div>
   <!-- /puzzle -->
 
-  <!-- Link list (compact, below puzzle) -->
-  <nav class="links" id="linkList">
-    <a href="garrysindex.html" class="link-item link-1">
-      <span class="link-dot"></span>
-      <span class="link-text">
-        <span class="link-name">Civic Engagement</span>
-        <span class="link-domain">garrysindex.org</span>
-      </span>
-      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-    </a>
 
-    <a href="leaving.html?to=garrysnotes" class="link-item link-2">
-      <span class="link-dot"></span>
-      <span class="link-text">
-        <span class="link-name">Articles</span>
-        <span class="link-domain">garrysnotes.org</span>
-      </span>
-      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-    </a>
-
-    <a href="#" class="link-item link-3">
-      <span class="link-dot"></span>
-      <span class="link-text">
-        <span class="link-name">Civic Data</span>
-        <span class="link-domain">garryslist.org</span>
-      </span>
-      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-    </a>
-
-    <a href="#newsletter" class="link-item link-4">
-      <span class="link-dot"></span>
-      <span class="link-text">
-        <span class="link-name">Newsletter</span>
-        <span class="link-domain">Subscribe for updates</span>
-      </span>
-      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </a>
-  </nav>
 
 </section>
 </main>
@@ -545,30 +434,21 @@ body {
 </footer>
 
 <script>
-// Trigger snap flash + reveal links after pieces land
 window.addEventListener('load', () => {
   const svg = document.getElementById('puzzleSvg');
-  const links = document.querySelectorAll('.link-item');
-
-  // After the last piece lands (~1.45s) add snapped class for flash
-  setTimeout(() => {
-    svg.classList.add('snapped');
-    // Reveal link list
-    links.forEach(el => el.classList.add('visible'));
-  }, 1450);
+  // Snap flash after last piece lands
+  setTimeout(() => svg.classList.add('snapped'), 1450);
 });
 
-// Piece hover: slight lift using CSS via JS-toggled transform
-// (Each piece group handles hover via CSS filter on the shape,
-//  but we also translate the group slightly on hover for tactility)
+// Hover: lift piece + brighten fill
 document.querySelectorAll('.piece').forEach(piece => {
   piece.addEventListener('mouseenter', () => {
-    piece.style.filter = 'drop-shadow(0 6px 20px rgba(0,0,0,.22))';
-    piece.style.transform = piece.style.transform.replace('translate(0, 0)', '') + ' translateY(-3px)';
+    piece.style.filter = 'drop-shadow(0 8px 24px rgba(0,0,0,.28))';
+    piece.querySelectorAll('.piece-fill').forEach(r => r.style.filter = 'brightness(1.12)');
   });
   piece.addEventListener('mouseleave', () => {
     piece.style.filter = '';
-    piece.style.transform = '';
+    piece.querySelectorAll('.piece-fill').forEach(r => r.style.filter = '');
   });
 });
 </script>

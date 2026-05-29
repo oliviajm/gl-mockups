@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garry's List — Putting together the pieces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bridge-red: #B04A32;
+  --bridge-red-dark: #8E3924;
+  --ink: #1A1614;
+  --ink-mid: #5C5048;
+  --ink-soft: #8A7E73;
+  --paper: #F5F1EA;
+  --paper-warm: #EFE7D8;
+  --fog: #D6D4CF;
+  --fog-dark: #A8A39B;
+  --white: #FFFFFF;
+  --font-hed: 'Fraunces', Georgia, serif;
+  --font: 'Source Sans 3', system-ui, sans-serif;
+
+  /* Piece colors */
+  --c1: #B04A32; /* civic — bridge red */
+  --c2: #3D7B7B; /* articles — teal */
+  --c3: #C4923E; /* data — gold */
+  --c4: #5A6E8A; /* newsletter — slate */
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===================================================
+   HERO
+   =================================================== */
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 24px 56px;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  animation: fadeUp .6s ease both;
+}
+.logo-mark {
+  font-family: var(--font-hed);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bridge-red);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+/* Headlines */
+.hero-eyebrow {
+  font-family: var(--font-hed);
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-soft);
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+  animation: fadeUp .6s ease .06s both;
+}
+.hero-headline {
+  font-family: var(--font-hed);
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 500;
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: -.02em;
+  line-height: 1.06;
+  max-width: 16ch;
+  margin-bottom: 18px;
+  animation: fadeUp .6s ease .1s both;
+}
+.hero-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--ink-mid);
+  text-align: center;
+  max-width: 46ch;
+  line-height: 1.6;
+  margin-bottom: 56px;
+  animation: fadeUp .6s ease .15s both;
+}
+
+/* ===================================================
+   PUZZLE GRID
+   =================================================== */
+/*
+  We render a 2×2 SVG puzzle where each piece is a
+  clip-path cutout of a colored rectangle.
+  The 4 pieces fly in from 4 directions and lock together.
+*/
+.puzzle-wrapper {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin-bottom: 64px;
+}
+
+.puzzle-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Each piece group starts off-screen, then translates to (0,0) */
+.piece {
+  will-change: transform, opacity;
+}
+
+/* Piece label */
+.piece-label-group {
+  pointer-events: none;
+}
+.piece-label {
+  font-family: var(--font-hed);
+  font-size: 15px;
+  font-weight: 500;
+  fill: rgba(255,255,255,0.95);
+  letter-spacing: -.01em;
+}
+.piece-sublabel {
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 400;
+  fill: rgba(255,255,255,0.72);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Hover lift on piece */
+.piece-hitarea {
+  cursor: pointer;
+  transition: filter .25s;
+}
+.piece-hitarea:hover .piece-shape {
+  filter: brightness(1.08);
+}
+
+/* ===================================================
+   LINK LIST (below puzzle, minimal)
+   =================================================== */
+.links {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border: 1px solid var(--fog);
+  border-radius: 8px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s, box-shadow .2s, transform .18s;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.link-item.visible {
+  animation: fadeUp .5s ease forwards;
+}
+.link-item:nth-child(1) { animation-delay: .0s; }
+.link-item:nth-child(2) { animation-delay: .06s; }
+.link-item:nth-child(3) { animation-delay: .12s; }
+.link-item:nth-child(4) { animation-delay: .18s; }
+
+.link-item:hover {
+  border-color: var(--fog-dark);
+  box-shadow: 0 4px 16px rgba(26,22,20,.07);
+  transform: translateY(-2px);
+}
+
+.link-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.link-1 .link-dot { background: var(--c1); }
+.link-2 .link-dot { background: var(--c2); }
+.link-3 .link-dot { background: var(--c3); }
+.link-4 .link-dot { background: var(--c4); }
+
+.link-text { flex: 1; }
+.link-name {
+  font-family: var(--font-hed);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  display: block;
+  margin-bottom: 1px;
+}
+.link-domain {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.link-arrow {
+  color: var(--fog-dark);
+  flex-shrink: 0;
+  transition: transform .2s, color .2s;
+}
+.link-item:hover .link-arrow { transform: translateX(3px); color: var(--bridge-red); }
+
+/* ===================================================
+   FOOTER
+   =================================================== */
+.hub-footer {
+  background: var(--white);
+  border-top: 1px solid var(--fog);
+  padding: 28px 24px 32px;
+  text-align: center;
+  margin-top: 56px;
+}
+.footer-links {
+  display: flex; gap: 20px; justify-content: center;
+  flex-wrap: wrap; list-style: none; margin-bottom: 14px;
+}
+.footer-links a { font-size: 13px; color: var(--ink-soft); }
+.footer-links a:hover { color: var(--ink); }
+.footer-disclaimer {
+  font-size: 11px; color: var(--ink-soft);
+  max-width: 60ch; margin: 0 auto 8px; line-height: 1.6;
+}
+.footer-copy { font-size: 12px; color: var(--ink-soft); }
+
+/* ===================================================
+   ANIMATIONS
+   =================================================== */
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* Piece fly-in keyframes — each starts far out, ends at 0,0 */
+@keyframes flyFromTopLeft {
+  0%   { transform: translate(-160px, -160px) scale(.85); opacity: 0; }
+  60%  { opacity: 1; }
+  85%  { transform: translate(4px, 4px) scale(1.01); }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes flyFromTopRight {
+  0%   { transform: translate(160px, -160px) scale(.85); opacity: 0; }
+  60%  { opacity: 1; }
+  85%  { transform: translate(-4px, 4px) scale(1.01); }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes flyFromBottomLeft {
+  0%   { transform: translate(-160px, 160px) scale(.85); opacity: 0; }
+  60%  { opacity: 1; }
+  85%  { transform: translate(4px, -4px) scale(1.01); }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes flyFromBottomRight {
+  0%   { transform: translate(160px, 160px) scale(.85); opacity: 0; }
+  60%  { opacity: 1; }
+  85%  { transform: translate(-4px, -4px) scale(1.01); }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+/* Subtle idle float after assembly */
+@keyframes idleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.piece-tl { animation: flyFromTopLeft     .9s cubic-bezier(.22,.68,0,1.2) .2s both; }
+.piece-tr { animation: flyFromTopRight    .9s cubic-bezier(.22,.68,0,1.2) .32s both; }
+.piece-bl { animation: flyFromBottomLeft  .9s cubic-bezier(.22,.68,0,1.2) .44s both; }
+.piece-br { animation: flyFromBottomRight .9s cubic-bezier(.22,.68,0,1.2) .56s both; }
+
+/* After all pieces land, gently breathe the whole puzzle */
+.puzzle-svg {
+  animation: idleFloat 5s ease-in-out 2s infinite;
+}
+
+/* Lock flash — brief brightness pulse when pieces snap */
+@keyframes snapFlash {
+  0%  { filter: brightness(1); }
+  50% { filter: brightness(1.18) drop-shadow(0 0 10px rgba(176,74,50,.35)); }
+  100%{ filter: brightness(1); }
+}
+.puzzle-svg.snapped {
+  animation: snapFlash .4s ease forwards, idleFloat 5s ease-in-out 2.4s infinite;
+}
+
+@media (max-width: 480px) {
+  .puzzle-wrapper { width: 280px; height: 280px; }
+  .hero { padding: 48px 18px 40px; }
+}
+</style>
+</head>
+<body>
+
+<main>
+<section class="hero">
+
+  <!-- Logo -->
+  <div class="logo">
+    <div class="logo-mark">Garry's List</div>
+  </div>
+
+  <p class="hero-eyebrow">Putting together the pieces of California politics</p>
+  <h1 class="hero-headline">California,<br>accounted for.</h1>
+  <p class="hero-sub">Independent reporting, civic data, and accountability journalism — built piece by piece.</p>
+
+  <!-- ===================== PUZZLE ===================== -->
+  <!--
+    2×2 puzzle. Each piece is an interlocking SVG shape.
+    Grid is 340×340. Each cell is 170×170.
+    Tabs (connectors): radius 22, centered on the shared edge.
+    We clip each piece so the tab on the shared edge pokes
+    INTO the neighbor's space, and the socket cuts in.
+  -->
+  <div class="puzzle-wrapper" id="puzzleWrapper" role="img" aria-label="Four puzzle pieces representing Civic Engagement, Articles, Data, and Newsletter coming together">
+    <svg class="puzzle-svg" id="puzzleSvg" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+
+        <!--
+          PIECE PATHS — hand-crafted 2×2 interlocking puzzle.
+          Convention:
+            • Grid: 0,0 → 340,340 with center at 170,170
+            • Horizontal connector center: x=170, half-width = 22, bump h = 20
+            • Vertical connector center:  y=170, half-width = 22, bump h = 20
+            • TL piece owns: right-edge TAB (points right) + bottom-edge TAB (points down)
+            • TR piece owns: left-edge SOCKET + bottom-edge TAB (points down)
+            • BL piece owns: right-edge TAB + top-edge SOCKET
+            • BR piece owns: left-edge SOCKET + top-edge SOCKET
+
+          Path trace: always clockwise from top-left corner of the bounding quad.
+        -->
+
+        <!-- TL: top=straight, right=tab out, bottom=tab out, left=straight -->
+        <path id="pieceTL" d="
+          M 0,0
+          L 170,0
+          L 170,148
+          C 148,148 148,126 170,126
+          C 192,126 192,148 170,148
+          L 170,170
+          L 148,170
+          C 148,148 126,148 126,170
+          C 126,192 148,192 148,170
+          L 0,170
+          Z
+        "/>
+
+        <!-- TR: top=straight, right=straight, bottom=tab out, left=socket in -->
+        <path id="pieceTR" d="
+          M 170,0
+          L 340,0
+          L 340,170
+          L 192,170
+          C 192,192 214,192 214,170
+          C 214,148 192,148 192,170
+          L 170,170
+          L 170,148
+          C 192,148 192,126 170,126
+          C 148,126 148,148 170,148
+          L 170,0
+        "/>
+
+        <!-- BL: top=socket in, right=tab out, bottom=straight, left=straight -->
+        <path id="pieceBL" d="
+          M 0,170
+          L 148,170
+          C 148,192 126,192 126,170
+          C 126,148 148,148 148,170
+          L 170,170
+          L 170,192
+          C 148,192 148,214 170,214
+          C 192,214 192,192 170,192
+          L 170,340
+          L 0,340
+          Z
+        "/>
+
+        <!-- BR: top=socket in, right=straight, bottom=straight, left=socket in -->
+        <path id="pieceBR" d="
+          M 170,170
+          L 192,170
+          C 192,148 214,148 214,170
+          C 214,192 192,192 192,170
+          L 340,170
+          L 340,340
+          L 170,340
+          L 170,192
+          C 192,192 192,214 170,214
+          C 148,214 148,192 170,192
+          L 170,170
+        "/>
+
+        <!-- Clip paths (same shapes) -->
+        <clipPath id="clipTL"><use href="#pieceTL"/></clipPath>
+        <clipPath id="clipTR"><use href="#pieceTR"/></clipPath>
+        <clipPath id="clipBL"><use href="#pieceBL"/></clipPath>
+        <clipPath id="clipBR"><use href="#pieceBR"/></clipPath>
+      </defs>
+
+      <!-- ── TL: Civic Engagement ── -->
+      <g class="piece piece-tl" id="pieceTLGroup">
+        <rect x="0" y="0" width="200" height="200" fill="#B04A32" clip-path="url(#clipTL)"/>
+        <!-- subtle texture lines -->
+        <rect x="0" y="0" width="200" height="200" fill="url(#texTL)" clip-path="url(#clipTL)" opacity=".08"/>
+        <g class="piece-label-group" clip-path="url(#clipTL)">
+          <text class="piece-label" x="24" y="62">Civic</text>
+          <text class="piece-label" x="24" y="82">Engage-</text>
+          <text class="piece-label" x="24" y="102">ment</text>
+          <text class="piece-sublabel" x="24" y="120">garrysindex.org</text>
+        </g>
+        <!-- invisible hit area -->
+        <a href="garrysindex.html">
+          <use href="#pieceTL" fill="transparent"/>
+        </a>
+      </g>
+
+      <!-- ── TR: Articles ── -->
+      <g class="piece piece-tr" id="pieceTRGroup">
+        <rect x="140" y="0" width="200" height="200" fill="#3D7B7B" clip-path="url(#clipTR)"/>
+        <g class="piece-label-group" clip-path="url(#clipTR)">
+          <text class="piece-label" x="192" y="62">Articles</text>
+          <text class="piece-sublabel" x="192" y="82">garrysnotes.org</text>
+        </g>
+        <a href="leaving.html?to=garrysnotes">
+          <use href="#pieceTR" fill="transparent"/>
+        </a>
+      </g>
+
+      <!-- ── BL: Data ── -->
+      <g class="piece piece-bl" id="pieceBLGroup">
+        <rect x="0" y="140" width="200" height="200" fill="#C4923E" clip-path="url(#clipBL)"/>
+        <g class="piece-label-group" clip-path="url(#clipBL)">
+          <text class="piece-label" x="24" y="230">Civic</text>
+          <text class="piece-label" x="24" y="250">Data</text>
+          <text class="piece-sublabel" x="24" y="268">garryslist.org</text>
+        </g>
+        <a href="#">
+          <use href="#pieceBL" fill="transparent"/>
+        </a>
+      </g>
+
+      <!-- ── BR: Newsletter ── -->
+      <g class="piece piece-br" id="pieceBRGroup">
+        <rect x="140" y="140" width="200" height="200" fill="#5A6E8A" clip-path="url(#clipBR)"/>
+        <g class="piece-label-group" clip-path="url(#clipBR)">
+          <text class="piece-label" x="196" y="230">News-</text>
+          <text class="piece-label" x="196" y="250">letter</text>
+          <text class="piece-sublabel" x="196" y="268">Subscribe</text>
+        </g>
+        <a href="#newsletter">
+          <use href="#pieceBR" fill="transparent"/>
+        </a>
+      </g>
+
+      <!-- Center glow dot after assembly (fades in after pieces land) -->
+      <circle id="centerGlow" cx="170" cy="170" r="6" fill="white" opacity="0">
+        <animate attributeName="opacity" values="0;0.9;0" dur="0.6s" begin="1.6s" fill="freeze"/>
+        <animate attributeName="r" values="4;14;4" dur="0.6s" begin="1.6s" fill="freeze"/>
+      </circle>
+
+    </svg>
+  </div>
+  <!-- /puzzle -->
+
+  <!-- Link list (compact, below puzzle) -->
+  <nav class="links" id="linkList">
+    <a href="garrysindex.html" class="link-item link-1">
+      <span class="link-dot"></span>
+      <span class="link-text">
+        <span class="link-name">Civic Engagement</span>
+        <span class="link-domain">garrysindex.org</span>
+      </span>
+      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+
+    <a href="leaving.html?to=garrysnotes" class="link-item link-2">
+      <span class="link-dot"></span>
+      <span class="link-text">
+        <span class="link-name">Articles</span>
+        <span class="link-domain">garrysnotes.org</span>
+      </span>
+      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+
+    <a href="#" class="link-item link-3">
+      <span class="link-dot"></span>
+      <span class="link-text">
+        <span class="link-name">Civic Data</span>
+        <span class="link-domain">garryslist.org</span>
+      </span>
+      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+
+    <a href="#newsletter" class="link-item link-4">
+      <span class="link-dot"></span>
+      <span class="link-text">
+        <span class="link-name">Newsletter</span>
+        <span class="link-domain">Subscribe for updates</span>
+      </span>
+      <svg class="link-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+</section>
+</main>
+
+<footer class="hub-footer" id="newsletter">
+  <ul class="footer-links">
+    <li><a href="mailto:hello@garryslist.org">Contact</a></li>
+    <li><a href="https://garryslist.org/privacy" target="_blank">Privacy</a></li>
+  </ul>
+  <p class="footer-disclaimer">Garry's List operates affiliated organizations across distinct legal entities. Reporting and civic education are conducted by separate organizations as required by law.</p>
+  <p class="footer-copy">&copy; 2026 Garry's List</p>
+</footer>
+
+<script>
+// Trigger snap flash + reveal links after pieces land
+window.addEventListener('load', () => {
+  const svg = document.getElementById('puzzleSvg');
+  const links = document.querySelectorAll('.link-item');
+
+  // After the last piece lands (~1.45s) add snapped class for flash
+  setTimeout(() => {
+    svg.classList.add('snapped');
+    // Reveal link list
+    links.forEach(el => el.classList.add('visible'));
+  }, 1450);
+});
+
+// Piece hover: slight lift using CSS via JS-toggled transform
+// (Each piece group handles hover via CSS filter on the shape,
+//  but we also translate the group slightly on hover for tactility)
+document.querySelectorAll('.piece').forEach(piece => {
+  piece.addEventListener('mouseenter', () => {
+    piece.style.filter = 'drop-shadow(0 6px 20px rgba(0,0,0,.22))';
+    piece.style.transform = piece.style.transform.replace('translate(0, 0)', '') + ' translateY(-3px)';
+  });
+  piece.addEventListener('mouseleave', () => {
+    piece.style.filter = '';
+    piece.style.transform = '';
+  });
+});
+</script>
+</body>
+</html>
